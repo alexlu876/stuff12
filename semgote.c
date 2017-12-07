@@ -18,7 +18,7 @@ int main(int argc, char* argv[]){
   int i = 0;
   while(argv[i]){
   if(!(strcmp(argv[i], "-c"))){
-    sd = semget(KEY, 1, IPC_CREAT | IPC_EXCL);
+    sd = semget(KEY, 1, IPC_CREAT | IPC_EXCL | 0644);
     if(sd == -1){
       printf("Silly you, a semaphore already exists!\n");
       return 0;
@@ -29,13 +29,10 @@ int main(int argc, char* argv[]){
     }
   }
   if(!(strcmp(argv[i], "-v"))){
-    printf("Semaphore value: %d\n", semctl(semget(KEY, 1, 0), 0, GETVAL));
-    if(semctl(semget(KEY, 1, 0), 0, GETVAL) == -1){
-      printf("error: %s\n\n", strerror(errno));
-    }
+    printf("Semaphore value: %d\n", semctl(semget(KEY, 0, 0), 0, GETVAL));
   }
   if(!(strcmp(argv[i], "-r"))){
-    semctl(semget(KEY, 1, 0), 0, IPC_RMID);
+    semctl(semget(KEY, 0, 0), 0, IPC_RMID);
     printf("Semaphore removed\n");
   }
   i++;
